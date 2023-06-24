@@ -22,6 +22,7 @@ AllPassFilterAudioProcessorEditor::AllPassFilterAudioProcessorEditor (AllPassFil
     delayLineSizeSlider.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     delayLineSizeSlider.setPopupDisplayEnabled (true, false, this);
     delayLineSizeSlider.setTextValueSuffix (" ms");
+    delayLineSizeSlider.setSkewFactorFromMidPoint (200.0);
     delayLineSizeSlider.setValue(1000.0);
  
     // this function adds the slider to the editor
@@ -69,11 +70,6 @@ void AllPassFilterAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AllPassFilterAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
-//    auto sliderLeft = 120;
-//    delayLineSizeLabel.setBounds (sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
-//    delayLineGainLabel.setBounds (sliderLeft, 50, getWidth() - sliderLeft - 10, 20);
 }
 
 void AllPassFilterAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)

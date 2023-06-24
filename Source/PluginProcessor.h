@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include <array>
 //==============================================================================
 /**
 */
@@ -56,17 +56,11 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     //==============================================================================
-    void setSize(int size);
-    void setGain(float newGain);
     int delayLineSize;
     float delayLineGain;
 
 private:
-    float filterSampleRate;
-    
     int delayIndex;
-    
-    float lastOutput;
     juce::AudioBuffer<float> delayLine;
     float processSample(float input,int channel);
     //==============================================================================
