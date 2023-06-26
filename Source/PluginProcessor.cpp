@@ -13,7 +13,7 @@
 AllPassFilterAudioProcessor::AllPassFilterAudioProcessor()
      : AudioProcessor (BusesProperties().withInput  ("Input",  juce::AudioChannelSet::mono(), true)
                                         .withOutput ("Output", juce::AudioChannelSet::mono(), true)),
-        delayLineSize(0), delayLineGain(0.5), delayIndex(0)
+        apvts(*this, nullptr, "Parameters", createParameters()),delayIndex(0)
 
 {
 }
@@ -74,8 +74,7 @@ void AllPassFilterAudioProcessor::changeProgramName (int index, const juce::Stri
 //==============================================================================
 void AllPassFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    delayLineSize = sampleRate;
-    delayLine.setSize(2, delayLineSize);
+    delayLine.setSize(getTotalNumOutputChannels(), sampleRate);
     delayLine.clear();
 }
 
@@ -127,10 +126,30 @@ juce::AudioProcessorEditor* AllPassFilterAudioProcessor::createEditor()
 //==============================================================================
 void AllPassFilterAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+//    juce::MemoryOutputStream (destData, true).writeFloat (*delayLineSize);
+//    juce::MemoryOutputStream (destData, true).writeFloat (*delayLineGain);
+    
+//    std::unique_ptr<juce::XmlElement> xml (new juce::XmlElement ("AllPassParameters"));
+//    xml->setAttribute ("size", (double) *delayLineSize);
+//    xml->setAttribute ("gain", (double) *delayLineGain);
+//    copyXmlToBinary (*xml, destData);
 }
 
 void AllPassFilterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+//    *delayLineSize = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
+//    *delayLineGain = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
+    
+//    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+//
+//    if (xmlState.get() != nullptr)
+//    {
+//        if (xmlState->hasTagName ("AllPassParameters"))
+//        {
+//            *delayLineSize = (float) xmlState->getDoubleAttribute ("size", 33.0);
+//            *delayLineGain = (float) xmlState->getDoubleAttribute ("gain", 0.5);
+//        }
+//    }
 }
 
 //==============================================================================
@@ -139,8 +158,8 @@ float AllPassFilterAudioProcessor::processSample(float input, int channel)
 {
     float delaySample = delayLine.getSample(channel, delayIndex);
     float output = -input + delaySample;
-    delayLine.setSample(channel, delayIndex, input + (delaySample * delayLineGain));
-    delayIndex = (delayIndex + 1) % delayLineSize;
+    delayLine.setSample(channel, delayIndex, input + (delaySample * apvts.getRawParameterValue("size")->load()));
+    delayIndex = (delayIndex + 1) % (int) (apvts.getRawParameterValue("gain")->load() * this->getSampleRate() / 1000);
     return output;
 }
 
@@ -150,4 +169,11 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new AllPassFilterAudioProcessor();
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout AllPassFilterAudioProcessor::createParameters(){
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("size","delayLineSize", 1.0f,1000.0f,33.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("gain","delayLineGain", 0.0f,1.0f,0.5f));
+    
+    return {params.begin(),params.end()};
+}
 

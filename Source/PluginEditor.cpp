@@ -13,8 +13,6 @@
 AllPassFilterAudioProcessorEditor::AllPassFilterAudioProcessorEditor (AllPassFilterAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize (260, 400);
     
     delayLineSizeSlider.setSliderStyle (juce::Slider::LinearBarVertical);
@@ -23,11 +21,11 @@ AllPassFilterAudioProcessorEditor::AllPassFilterAudioProcessorEditor (AllPassFil
     delayLineSizeSlider.setPopupDisplayEnabled (true, false, this);
     delayLineSizeSlider.setTextValueSuffix (" ms");
     delayLineSizeSlider.setSkewFactorFromMidPoint (200.0);
-    delayLineSizeSlider.setValue(1000.0);
+    
+    delayLineSizeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "size", delayLineSizeSlider);
+
  
-    // this function adds the slider to the editor
     addAndMakeVisible (&delayLineSizeSlider);
-    delayLineSizeSlider.addListener (this);
     
     addAndMakeVisible (delayLineSizeLabel);
     delayLineSizeLabel.setText ("Delay", juce::dontSendNotification);
@@ -38,11 +36,10 @@ AllPassFilterAudioProcessorEditor::AllPassFilterAudioProcessorEditor (AllPassFil
     delayLineGainSlider.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     delayLineGainSlider.setPopupDisplayEnabled (true, false, this);
     delayLineGainSlider.setTextValueSuffix (" %");
-    delayLineGainSlider.setValue(50.0);
-
-    // this function adds the slider to the editor
+    
+    delayLineGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "gain", delayLineGainSlider);
+    
     addAndMakeVisible (&delayLineGainSlider);
-    delayLineGainSlider.addListener (this);
     
     addAndMakeVisible (delayLineGainLabel);
     delayLineGainLabel.setText ("Gain", juce::dontSendNotification);
@@ -72,13 +69,4 @@ void AllPassFilterAudioProcessorEditor::resized()
 {
 }
 
-void AllPassFilterAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
-{
-    if (slider == &delayLineSizeSlider){
-        audioProcessor.delayLineSize = delayLineSizeSlider.getValue() * audioProcessor.getSampleRate() / 1000;
-    }
-    else if(slider == &delayLineGainSlider){
-        audioProcessor.delayLineGain = delayLineGainSlider.getValue() / 100;
-    }
-    
-}
+

@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class AllPassFilterAudioProcessorEditor  : public juce::AudioProcessorEditor,private juce::Slider::Listener
+class AllPassFilterAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     AllPassFilterAudioProcessorEditor (AllPassFilterAudioProcessor&);
@@ -25,13 +25,13 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     AllPassFilterAudioProcessor& audioProcessor;
     juce::Slider delayLineSizeSlider;
     juce::Label delayLineSizeLabel;
     juce::Slider delayLineGainSlider;
     juce::Label delayLineGainLabel;
-    void sliderValueChanged (juce::Slider* slider) override;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLineSizeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLineGainAttachment;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AllPassFilterAudioProcessorEditor)
 };
