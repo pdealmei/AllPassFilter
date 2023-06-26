@@ -43,6 +43,7 @@ Generators
 ### How to use
 1. After building copy the VST3 file to your local VST3 folder
 2. Lauch your DAW/plugin host and load up the AllPassFilter plugin
+3. **IMPORTANT: This plugin is still in development stages so make sure to always place a limiter after it in order to protect your ears and equipment**
 
 ### Controls
 The AllPassFilter plugin has 2 controls:
