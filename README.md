@@ -6,7 +6,7 @@ This projects implements a simple all pass filter using the JUCE framework.
 It takes any audio input and applies a short delay with an inverted phase.
 
 #### How to use
-1. Copy the VST3/allpassfilter.vst3 file to your local VST3 folder
+1. After building copy the VST3 file to your local VST3 folder
 2. Lauch your DAW/plugin host and load up the AllPassFilter plugin
 
 #### Controls
