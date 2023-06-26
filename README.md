@@ -6,21 +6,21 @@ Tested using on Mac OSX 12.5.1, cmake 3.26.3, JUCE v7.0.5
 - Cmake 3.4
 - C++ 17
 
-#### Description
+### Description
 
 This projects implements a simple all pass filter using the JUCE framework.
 It takes any audio input and applies a short delay with an inverted phase.
 
-#### How to build
+### How to build
 This project uses FRUT (https://github.com/McMartin/FRUT) to build via cmake instead of projucer.
-Follow these steps to build:
-'''
+Follow these steps to build: 
+```
 $ cd AllPassFilter
 $ mkdir build && cd build
 $ cmake .. -G <generator>
-'''
+```
 where ``<generator>`` refers to the cmake generator used for the build.
-'''
+```
 Generators
 * Unix Makefiles               = Generates standard UNIX makefiles.
   Ninja                        = Generates build.ninja files.
@@ -38,16 +38,16 @@ Generators
   Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files.
   Sublime Text 2 - Unix Makefiles
                                = Generates Sublime Text 2 project files.
-'''
+```
 
-#### How to use
+### How to use
 1. After building copy the VST3 file to your local VST3 folder
 2. Lauch your DAW/plugin host and load up the AllPassFilter plugin
 
-#### Controls
+### Controls
 The AllPassFilter plugin has 2 controls:
 - Delay Line Size: controls the delay time
 - Delay Line Gain: controls the gain of the delayed signal
 
-#### Notes
+### Notes
 The plugin currently only works for mono input, i.e if a stereo signal is fed into it, it will sum it to mono.
